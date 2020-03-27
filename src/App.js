@@ -1,141 +1,95 @@
-import React from 'react';
+import React,{ Component } from 'react';
 import logo, { ReactComponent } from './logo.svg';
 import './App.css';
-import Papa from 'papaparse'
-
-
-/*
-
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-
-*/
-
-/*
-
-// trying to create function to extract text from webpage
-function getInfected (source) {
-  return
-  var x = document.getElementById("myBtn").textContent;
-}
-
-*/
+import CountryCovid from './CountryCovid.js';
+import countryList from './index.js';
 
 
 
-/*
-window.onload=function()
-{
-   alert(extractContent("https://www.worldometers.info/coronavirus/"));
-};
-*/
 
 
-class CovidNumbers extends React.Component {
+
+
+
+class App extends Component {
 
   state = {
-    covidNumber1: 0,
-    covidNumber2: 0
-
+    data: []
   }
 
   
 
-  ExtractContent1 = () => {
+  async fetchData() {
+    var dataProvider = [];
 
-    let randomNumber;
-    randomNumber = Math.random();
-    console.log(randomNumber);
-    this.setState(
-      {
-        covidNumber1: randomNumber
-      }
-    )
+    const result = await fetch(
+      "https://covidapi.info/api/v1/country/dnk"
+    ).then(response => response.json());
 
-    /*
-    return (
-      fetch(url)
-      .then((resp) => resp.console.log(resp)) // Transform the data into json
+    var results = result.result;
 
-      // .then(function(data) {
-        // Create and append the li's to the ul
-    );
-    */
+    var days = [];
+    Object.keys(results).forEach(key => {
+      days.push(key);
+    });
+    var values = [];
+    Object.values(results).forEach(value => {
+      values.push(value);
+    });
+
+    for (var i = 0; i < days.length; i++) {
+      dataProvider.push({
+        date: days[i],
+        confirmed: values[i].confirmed,
+        deaths: values[i].deaths,
+        recovered: values[i].recovered
+      });
+    }
+
+    return dataProvider;
+  }
+
+
+  componentDidMount() {  
+    this.fetchData().then(data =>{
+      console.log(data)    
+    })
+    .then(data  => this.setState({data}))
+  }
+
+  componentWillUnmount() {}
 
   
- }
-
- ExtractContent2 = async () => {
-
-  let url="https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_daily_reports/03-26-2020.csv"
-
-  var data = Papa.parse.readRemoteFile(url, {
-    // rest of config ...
-  })
-
-  // var data = Papa.parse(readRemoteFile());
-
-  console.log(data);
-}
- 
 
 
-  render () {
+
+  render() {
+
+    const {countries} = this.props
+
     return (
-      <div className="CovidNubers">
-        
-        <header className="App-header">
-          <img src='Coronavirus-CDC-768x432.jpg' className="App-logo" alt="logo" />
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
-          <button onClick={this.ExtractContent1}>Fetch data</button>      
-          <button onClick={this.ExtractContent2}>Fetch data</button>          
-    
-          <p>
-              Watch <code>Corona numbers</code> and stand paralyzed in awe
-            </p>
-            <ul>
-              <li>Infected 
-                <div className="infectedNumbers1">
-                  The covidNumber 1 is :
-                  {this.state.covidNumber1}
-              </div>           
-              <div className="infectedNumbers2">
-                  The covidNumber 2 is :
-                  {this.state.covidNumber2}
-              </div>      
-              </li>    
-            </ul>
-        </header>
-    
-        
+    <div className="App">
+      <h1>Covid-19 Numbers</h1>
+      <div id="chartdiv" style={{ width: "100%", height: "500px" }}>
+        {countries.map(
+          (countryCovid, i) =>
+          <CountryCovid
+            key = {i}
+            name={countryCovid.name}
+            confirmed={countryCovid.confirmed}
+            hospitalized={countryCovid.hospitalized}
+            dead={countryCovid.dead}
+            />
+        )}
       </div>
-      ); 
+      <div>
+      </div>
+    </div>
+    );
   }
 }
 
 
 
 // export default App;
-export default CovidNumbers;
+export default App;
