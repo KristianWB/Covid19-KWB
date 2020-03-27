@@ -1,8 +1,7 @@
 import React,{ Component } from 'react';
-import logo, { ReactComponent } from './logo.svg';
+// import logo, { ReactComponent } from './logo.svg';
 import './App.css';
 import CountryCovid from './CountryCovid.js';
-import countryList from './index.js';
 
 
 
@@ -69,7 +68,23 @@ class App extends Component {
 
     return (
     <div className="App">
-      <h1>Covid-19 Numbers</h1>
+      <header className="App-header">
+          <img src="./Coronavirus-CDC-768x432.jpg" className="App-logo" alt="logo" />
+          <br></br>
+
+          <p>
+            Scroll down to behold the horror of Scandinavia!!!
+          </p>
+          <a
+            className="App-link"
+            href="https://www.worldometers.info/coronavirus/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            World numbers
+          </a>
+        </header>
+      <h1>Covid-19 Numbers Scandinavia</h1>
       <div id="chartdiv" style={{ width: "100%", height: "500px" }}>
         {countries.map(
           (countryCovid, i) =>

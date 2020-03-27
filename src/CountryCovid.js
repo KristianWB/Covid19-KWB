@@ -5,7 +5,7 @@ const CountryCovid = ({name, confirmed, hospitalized, dead}) => {
       <section>
         <h2>{name}</h2>
         <p>Confirmed: {confirmed}</p>
-        <p>Hospitalized: {hospitalized} page</p>
+        <p>Hospitalized: {hospitalized}</p>
         <p>Fragged: {dead}</p>
       </section>
     )
